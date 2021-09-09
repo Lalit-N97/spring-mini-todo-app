@@ -3,14 +3,14 @@ package com.todo.businessbean;
 import java.util.Date;
 
 public class TodoBean {
-	private Long todoId;
+	private Integer todoId;
 	private String todoTask;
 	private Date todoCreateDate;
 	
-	public Long getTodoId() {
+	public Integer getTodoId() {
 		return todoId;
 	}
-	public void setTodoId(Long todoId) {
+	public void setTodoId(Integer todoId) {
 		this.todoId = todoId;
 	}
 	public String getTodoTask() {
