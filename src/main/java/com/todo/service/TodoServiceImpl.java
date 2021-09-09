@@ -3,8 +3,11 @@ package com.todo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.todo.businessbean.TodoBean;
 
+@Service
 public class TodoServiceImpl implements TodoService{
 
 	private List<TodoBean> todoBeans;
@@ -30,7 +33,7 @@ public class TodoServiceImpl implements TodoService{
 
 	@Override
 	public TodoBean getTodo(TodoBean bean) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
