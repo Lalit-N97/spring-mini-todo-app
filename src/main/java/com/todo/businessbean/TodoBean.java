@@ -6,6 +6,7 @@ public class TodoBean {
 	private Integer todoId;
 	private String todoTask;
 	private Date todoCreateDate;
+	private Boolean isDone;
 	
 	public Integer getTodoId() {
 		return todoId;
@@ -24,6 +25,12 @@ public class TodoBean {
 	}
 	public void setTodoCreateDate(Date todoCreateDate) {
 		this.todoCreateDate = todoCreateDate;
+	}
+	public Boolean getIsDone() {
+		return isDone;
+	}
+	public void setIsDone(Boolean isDone) {
+		this.isDone = isDone;
 	}
 	
 }

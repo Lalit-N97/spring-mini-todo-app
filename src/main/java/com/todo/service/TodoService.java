@@ -8,11 +8,11 @@ public interface TodoService {
 	
 	List<TodoBean> getAllTodos();
 	
-	Long createTodo(TodoBean bean);
+	Integer createTodo(TodoBean bean);
 	
 	TodoBean getTodo(TodoBean bean);
 	
 	TodoBean updateTodo(TodoBean bean);
 	
-	Long deleteTodo(TodoBean bean);
+	Integer deleteTodo(TodoBean bean);
 }
