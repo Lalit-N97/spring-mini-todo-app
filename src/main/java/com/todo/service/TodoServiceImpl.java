@@ -11,7 +11,7 @@ import com.todo.businessbean.TodoBean;
 @Service
 public class TodoServiceImpl implements TodoService{
 
-	static Integer id = 1;
+	private Integer id = 1;
 	private List<TodoBean> todoBeans;
 	
 	public TodoServiceImpl() {
@@ -21,6 +21,7 @@ public class TodoServiceImpl implements TodoService{
 			todoBean.setTodoId(id++);
 			todoBean.setTodoTask("complete hard problem");
 			todoBean.setTodoCreateDate(new Date());
+			todoBean.setIsDone(false);
 			todoBeans.add(todoBean);
 		}
 	}
@@ -35,28 +36,42 @@ public class TodoServiceImpl implements TodoService{
 		bean.setTodoId(id++);
 		bean.setTodoTask(bean.getTodoTask());
 		bean.setTodoCreateDate(new Date());
+		bean.setIsDone(false);
 		todoBeans.add(bean);
 		return bean.getTodoId();
 	}
 
 	@Override
-	public TodoBean getTodo(TodoBean bean) {
+	public TodoBean getTodo(Integer id) {
 		for(TodoBean todoBean : todoBeans) {
-			if(todoBean.getTodoId() == bean.getTodoId()) return todoBean;
+			if(id == todoBean.getTodoId()) return todoBean;
 		}
 		return null;
 	}
 
 	@Override
-	public TodoBean updateTodo(TodoBean bean) {
-		// TODO Auto-generated method stub
+	public TodoBean updateTodo(Integer id, TodoBean bean) {
+		for(int i = 0; i < todoBeans.size(); i++) {
+			if(id == todoBeans.get(i).getTodoId()) {
+				bean.setTodoId(id);
+				bean.setTodoCreateDate(todoBeans.get(i).getTodoCreateDate());
+				bean.setIsDone(false);
+				todoBeans.set(i, bean);
+				return todoBeans.get(i);
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public Integer deleteTodo(TodoBean bean) {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer deleteTodo(Integer id) {
+		for(TodoBean todoBean : todoBeans) {
+			if(id == todoBean.getTodoId()) {
+				todoBeans.remove(todoBean);
+				return 1;
+			} 
+		}
+		return 0;
 	}
 
 }

@@ -10,9 +10,9 @@ public interface TodoService {
 	
 	Integer createTodo(TodoBean bean);
 	
-	TodoBean getTodo(TodoBean bean);
+	TodoBean getTodo(Integer id);
 	
-	TodoBean updateTodo(TodoBean bean);
+	TodoBean updateTodo(Integer id, TodoBean bean);
 	
-	Integer deleteTodo(TodoBean bean);
+	Integer deleteTodo(Integer id);
 }
