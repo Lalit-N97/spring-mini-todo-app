@@ -3,75 +3,82 @@ package com.todo.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todo.businessbean.TodoBean;
+import com.todo.dao.TodoRepository;
+import com.todo.entity.TodoEntity;
 
 @Service
 public class TodoServiceImpl implements TodoService{
 
-	private Integer id = 1;
-	private List<TodoBean> todoBeans;
-	
-	public TodoServiceImpl() {
-		todoBeans = new ArrayList();
-		TodoBean todoBean = new TodoBean();
-		for (int i = 0; i < 3; i++) {
-			todoBean.setTodoId(id++);
-			todoBean.setTodoTask("complete hard problem");
-			todoBean.setTodoCreateDate(new Date());
-			todoBean.setIsDone(false);
-			todoBeans.add(todoBean);
-		}
-	}
+	@Autowired
+	private TodoRepository todoRepo;
 	
 	@Override
 	public List<TodoBean> getAllTodos() {
-		return todoBeans;
+		List<TodoEntity> entityList = todoRepo.findAll();
+		List<TodoBean> beanList = new ArrayList<TodoBean>();
+		entityList.forEach(entity -> beanList.add(convertEntityToBean(entity)));
+		return beanList;
 	}
 
 	@Override
 	public Integer createTodo(TodoBean bean) {
-		bean.setTodoId(id++);
-		bean.setTodoTask(bean.getTodoTask());
-		bean.setTodoCreateDate(new Date());
-		bean.setIsDone(false);
-		todoBeans.add(bean);
-		return bean.getTodoId();
+		TodoEntity entity = todoRepo.save(convertBeanToEntity(bean));
+		return entity.getTodoId();
 	}
-
+	
+	public boolean createTodos(List<TodoBean> beanList) {
+		List<TodoEntity> entityList = beanList.stream().map(e -> convertBeanToEntity(e)).collect(Collectors.toList());
+		todoRepo.saveAll(entityList);
+		return true;
+	}
+	
 	@Override
 	public TodoBean getTodo(Integer id) {
-		for(TodoBean todoBean : todoBeans) {
-			if(id == todoBean.getTodoId()) return todoBean;
-		}
-		return null;
+		Optional<TodoEntity> entity = todoRepo.findById(id);
+		// optional way
+		return Optional.ofNullable(convertEntityToBean(entity.get())).orElse(null);
+		// old way
+//		return entity.isPresent() ? convertEntityToBean(entity.get()) : null; 
 	}
 
 	@Override
 	public TodoBean updateTodo(Integer id, TodoBean bean) {
-		for(int i = 0; i < todoBeans.size(); i++) {
-			if(id == todoBeans.get(i).getTodoId()) {
-				bean.setTodoId(id);
-				bean.setTodoCreateDate(todoBeans.get(i).getTodoCreateDate());
-				bean.setIsDone(false);
-				todoBeans.set(i, bean);
-				return todoBeans.get(i);
-			}
-		}
-		return null;
+		TodoEntity entity = todoRepo.findById(id).orElse(null);
+		entity.setTodoTask(bean.getTodoTask());
+		entity.setIsDone(bean.getIsDone());
+		entity.setTodoCreateDate(bean.getTodoCreateDate());
+		return convertEntityToBean(entity);
 	}
 
 	@Override
 	public Integer deleteTodo(Integer id) {
-		for(TodoBean todoBean : todoBeans) {
-			if(id == todoBean.getTodoId()) {
-				todoBeans.remove(todoBean);
-				return 1;
-			} 
-		}
-		return 0;
+		todoRepo.deleteById(id);
+		return 1;
+	}
+	
+	private TodoEntity convertBeanToEntity(TodoBean bean) {
+		TodoEntity entity = new TodoEntity();
+		entity.setTodoId(bean.getTodoId());
+		entity.setTodoTask(bean.getTodoTask());
+		entity.setIsDone(bean.getIsDone());
+		entity.setTodoCreateDate(bean.getTodoCreateDate());
+		return entity;
+	}
+	
+	private TodoBean convertEntityToBean(TodoEntity entity) {
+		TodoBean bean = new TodoBean();
+		bean.setTodoId(entity.getTodoId());
+		bean.setTodoTask(entity.getTodoTask());
+		bean.setIsDone(entity.getIsDone());
+		bean.setTodoCreateDate(entity.getTodoCreateDate());
+		return bean;
 	}
 
 }
