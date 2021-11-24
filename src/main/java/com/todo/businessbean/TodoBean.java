@@ -2,9 +2,21 @@ package com.todo.businessbean;
 
 import java.util.Date;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 public class TodoBean {
+	
+	@NotNull
+	@Positive
 	private Integer todoId;
+	
+	@Size(min=3, max=100)
 	private String todoTask;
+	
+	@Future
 	private Date todoCreateDate;
 	private Boolean isDone;
 	
