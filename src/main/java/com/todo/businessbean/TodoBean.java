@@ -16,7 +16,6 @@ public class TodoBean {
 	@Size(min=3, max=100)
 	private String todoTask;
 	
-	@Future
 	private Date todoCreateDate;
 	private Boolean isDone;
 	
