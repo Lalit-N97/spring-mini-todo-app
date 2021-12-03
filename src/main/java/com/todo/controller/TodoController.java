@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.businessbean.TodoBean;
+import com.todo.exception.UserNotFoundException;
 import com.todo.service.TodoService;
 
 @RestController
@@ -27,21 +28,20 @@ public class TodoController {
 	ResponseEntity<List<TodoBean>> getAllTodos(){
 		List<TodoBean> response = todoService.getAllTodos();
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Content-Length", Integer.toString(response.size()));
+		responseHeaders.set("Len", Integer.toString(response.size()));
 		return new ResponseEntity<List<TodoBean>>(response, responseHeaders, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	ResponseEntity<Integer> createTodo(@RequestBody TodoBean todoBean) {
 		 Integer response = todoService.createTodo(todoBean);
-		 HttpHeaders responseHeaders = new HttpHeaders();
-		 responseHeaders.set("Content-Length", Integer.toString(todoBean.getTodoTask().length()));
-		 return new ResponseEntity<Integer>(response, responseHeaders, HttpStatus.CREATED);
+		 return new ResponseEntity<Integer>(response, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<TodoBean> getTodo(@PathVariable Integer id) {
 		TodoBean response = todoService.getTodo(id);
+		if(response == null) throw new UserNotFoundException("not found - " + id);
 		return new ResponseEntity<TodoBean>(response, HttpStatus.OK);
 	}
 	
