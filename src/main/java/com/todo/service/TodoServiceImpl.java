@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.todo.businessbean.TodoBean;
 import com.todo.dao.TodoRepository;
 import com.todo.entity.TodoEntity;
+import com.todo.exception.UserNotFoundException;
 
 @Service
 public class TodoServiceImpl implements TodoService{
@@ -22,6 +23,7 @@ public class TodoServiceImpl implements TodoService{
 	@Override
 	public List<TodoBean> getAllTodos() {
 		List<TodoEntity> entityList = todoRepo.findAll();
+		if(entityList == null) throw new UserNotFoundException("not found ");
 		List<TodoBean> beanList = new ArrayList<TodoBean>();
 		entityList.forEach(entity -> beanList.add(convertEntityToBean(entity)));
 		return beanList;
@@ -42,6 +44,7 @@ public class TodoServiceImpl implements TodoService{
 	@Override
 	public TodoBean getTodo(Integer id) {
 		Optional<TodoEntity> entity = todoRepo.findById(id);
+		if(!entity.isPresent()) throw new UserNotFoundException("not found - " + id);
 		// optional way
 		return Optional.ofNullable(convertEntityToBean(entity.get())).orElse(null);
 		// old way

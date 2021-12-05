@@ -41,7 +41,6 @@ public class TodoController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	ResponseEntity<TodoBean> getTodo(@PathVariable Integer id) {
 		TodoBean response = todoService.getTodo(id);
-		if(response == null) throw new UserNotFoundException("not found - " + id);
 		return new ResponseEntity<TodoBean>(response, HttpStatus.OK);
 	}
 	
