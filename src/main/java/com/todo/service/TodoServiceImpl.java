@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,16 @@ public class TodoServiceImpl implements TodoService{
 	@Autowired
 	private TodoRepository todoRepo;
 	
+	public static Logger LOG = LoggerFactory.getLogger(TodoServiceImpl.class);
+	
 	@Override
 	public List<TodoBean> getAllTodos() {
 		List<TodoEntity> entityList = todoRepo.findAll();
-		if(entityList == null) throw new UserNotFoundException("not found ");
+		if(entityList == null) {
+			LOG.error("All Todos are NOT FOUND !");
+			throw new UserNotFoundException("not found ");
+		}
+		LOG.info("Found all todos");
 		List<TodoBean> beanList = new ArrayList<TodoBean>();
 		entityList.forEach(entity -> beanList.add(convertEntityToBean(entity)));
 		return beanList;
@@ -44,7 +52,11 @@ public class TodoServiceImpl implements TodoService{
 	@Override
 	public TodoBean getTodo(Integer id) {
 		Optional<TodoEntity> entity = todoRepo.findById(id);
-		if(!entity.isPresent()) throw new UserNotFoundException("not found - " + id);
+		if(!entity.isPresent()) {
+			LOG.error("Todo with id - {} is NOT FOUND ", id);
+			throw new UserNotFoundException("not found - " + id);
+		}
+		LOG.info("Todo with id - {} is FOUND", id);
 		// optional way
 		return Optional.ofNullable(convertEntityToBean(entity.get())).orElse(null);
 		// old way
