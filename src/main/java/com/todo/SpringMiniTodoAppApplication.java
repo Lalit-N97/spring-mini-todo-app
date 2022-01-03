@@ -8,7 +8,7 @@
  *  4. content negotiation by adding jackson-dataformat-xml dependency
  *  5. Authentication  and authorization using Spring Security
  *  6. Bean validations ++
- *  7. use logs using slf4j
+ *  7. use logs using slf4j ++
  * */
 
 package com.todo;
